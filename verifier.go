@@ -242,7 +242,12 @@ func (v *verifier) VerifyRequest(request *http.Request) error {
 }
 
 func (v *verifier) VerifyResponse(response *Response) error {
-	digestHeader := response.Headers.Get("Digest")
+	digestHeader := response.Headers.Get("Keygen-Digest")
+
+	if digestHeader == "" {
+		digestHeader = response.Headers.Get("Digest")
+	}
+
 	if digestHeader == "" {
 		return ErrResponseDigestMissing
 	}
@@ -253,7 +258,12 @@ func (v *verifier) VerifyResponse(response *Response) error {
 		return ErrResponseDigestInvalid
 	}
 
-	date := response.Headers.Get("Date")
+	date := response.Headers.Get("Keygen-Date")
+
+	if date == "" {
+		date = response.Headers.Get("Date")
+	}
+
 	if date == "" {
 		return ErrResponseDateMissing
 	}
